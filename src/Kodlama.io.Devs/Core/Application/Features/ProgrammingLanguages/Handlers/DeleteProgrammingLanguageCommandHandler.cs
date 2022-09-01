@@ -1,5 +1,6 @@
 ﻿using Application.Features.Commands.ProgrammingLanguages.Request;
 using Application.Services.Repositories;
+using Core.CrossCuttingConcerns.Exceptions;
 using Domain.Entities;
 using MediatR;
 
@@ -24,6 +25,7 @@ namespace Application.Features.ProgrammingLanguages.Handlers
                     await _programmingLanguageRepository.DeleteAsync(programmingLanguage);
                     return true;
                 }
+                throw new BusinessException("Cannot find entity");
             }
             return false;
 

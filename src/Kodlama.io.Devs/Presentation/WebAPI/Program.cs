@@ -20,14 +20,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-<<<<<<< HEAD:src/Kodlama.io.Devs/Presentation/WebAPI/Program.cs
 app.UseHttpsRedirection();
 app.ConfigureCustomExceptionMiddleware();
-=======
 //if (app.Environment.IsProduction())
     app.ConfigureCustomExceptionMiddleware();
 
->>>>>>> 3b5c75bcdc6288bfa55e34a5d216d6258e6d7f26:src/demoProjects/rentACar/WebAPI/Program.cs
 app.UseAuthorization();
 
 app.MapControllers();

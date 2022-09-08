@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Users.DeleteGithubAdress
+namespace Application.Features.Users.DeleteGithubAddress
 {
-    public class DeleteGithubAdressCommandRequest : IRequest<DeleteGithubAdressCommandResponse>
+    public class DeleteGithubAddressCommandRequest : IRequest<DeleteGithubAddressCommandResponse>
     {
         public int Id { get; set; }
     }

@@ -45,7 +45,7 @@ namespace Persistence.Contexts
                 a.Property(p => p.FirstName).HasColumnName("FirstName");
                 a.Property(p => p.LastName).HasColumnName("LastName");
                 a.Property(p => p.Status).HasColumnName("Status");
-                a.Property(p => p.GithubAdress).HasColumnName("GithubAdress");
+                a.Property(p => p.GithubAddress).HasColumnName("GithubAddress");
                 a.Property(p => p.PasswordHash).HasColumnName("PasswordHash");
                 a.Property(p => p.PasswordSalt).HasColumnName("PasswordSalt");
                 a.Property(p => p.Email).HasColumnName("Email");

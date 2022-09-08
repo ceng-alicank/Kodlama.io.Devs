@@ -1,6 +1,6 @@
-﻿using Application.Features.Users.AddGithubAdress;
+﻿using Application.Features.Users.AddGithubAddress;
 using Application.Features.Users.Create;
-using Application.Features.Users.DeleteGithubAdress;
+using Application.Features.Users.DeleteGithubAddress;
 using Application.Features.Users.Login;
 using Application.Features.Users.Update;
 using MediatR;
@@ -33,20 +33,20 @@ namespace WebAPI.Controllers
             var result = await _mediator.Send(request);
             return Ok(result);
         }
-        [HttpPost("GithubAdress")]
-        public async Task<IActionResult> AddGithubAdress(AddGithubAdressCommandRequest request)
+        [HttpPost("GithubAddress")]
+        public async Task<IActionResult> AddGithubAdress(AddGithubAddressCommandRequest request)
         {
             var result = await _mediator.Send(request);
             return Ok(result);
         }
-        [HttpPut("GithubAdress")]
-        public async Task<IActionResult> UpdateGithubAdress(UpdateGithubAdressCommandRequest request)
+        [HttpPut("GithubAddress")]
+        public async Task<IActionResult> UpdateGithubAdress(UpdateGithubAddressCommandRequest request)
         {
             var result = await _mediator.Send(request);
             return Ok(result);
         }
-        [HttpDelete("GithubAdress")]
-        public async Task<IActionResult> GithubAdress( DeleteGithubAdressCommandRequest request)
+        [HttpDelete("GithubAddress")]
+        public async Task<IActionResult> GithubAdress( DeleteGithubAddressCommandRequest request)
         {
             var result = await _mediator.Send(request);
             return Ok(result);

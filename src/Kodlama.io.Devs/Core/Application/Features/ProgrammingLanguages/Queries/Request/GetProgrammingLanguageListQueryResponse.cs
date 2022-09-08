@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.ProgrammingLanguages.Queries.Request
 {
-    public class GetProgrammingLanguageListQueryRequest : IRequest<IPaginate<ProgrammingLanguage>>
+    public class GetProgrammingLanguageListQueryRequest : IRequest<GetProgrammingLanguageListQueryResponse>
     {
         public PageRequest PageRequest { get; set; }
         

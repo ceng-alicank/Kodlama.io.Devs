@@ -13,6 +13,10 @@ namespace Persistence
             services.AddDbContext<AppDbContext>
                 (options => options.UseSqlServer(_configuration.GetConnectionString("DbConnectionString")));
             services.AddTransient<IProgrammingLanguageRepository, ProgrammingLanguageRepository>();
+            services.AddTransient<ITechnologyRepository, TechnologyRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IOperationClaimRepository, OperationClaimRepository>();
+            services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
         }
     }
 }

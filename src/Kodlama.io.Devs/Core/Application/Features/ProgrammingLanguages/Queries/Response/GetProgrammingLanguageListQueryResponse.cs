@@ -1,5 +1,6 @@
 ﻿using Application.Dtos;
 using Core.Persistence.Paging;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Application.Features.ProgrammingLanguages.Queries.Response
 {
     public class GetProgrammingLanguageListQueryResponse: BasePageableModel
     {
-        public IList<ProgrammingLanguageGetListDto>? Items { get; set; }
+        public IList<ProgrammingLanguage> Items { get; set; }
 
     }
 }

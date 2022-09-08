@@ -14,6 +14,7 @@ public class JwtHelper : ITokenHelper
     public IConfiguration Configuration { get; }
     private readonly TokenOptions _tokenOptions;
     private DateTime _accessTokenExpiration;
+    private DateTime _refreshTokenExpiration;
 
     public JwtHelper(IConfiguration configuration)
     {
@@ -24,6 +25,7 @@ public class JwtHelper : ITokenHelper
     public AccessToken CreateToken(User user, IList<OperationClaim> operationClaims)
     {
         _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
+        _refreshTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.RefreshTokenExpiration);
         SecurityKey securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
         SigningCredentials signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
         JwtSecurityToken jwt = CreateJwtSecurityToken(_tokenOptions, user, signingCredentials, operationClaims);
@@ -32,6 +34,8 @@ public class JwtHelper : ITokenHelper
 
         return new AccessToken
         {
+            RefreshToken = CreateRefreshToken(),
+            RefreshTokenExpiration = _refreshTokenExpiration,
             Token = token,
             Expiration = _accessTokenExpiration
         };
@@ -74,5 +78,12 @@ public class JwtHelper : ITokenHelper
         claims.AddName($"{user.FirstName} {user.LastName}");
         claims.AddRoles(operationClaims.Select(c => c.Name).ToArray());
         return claims;
+    }
+    private string CreateRefreshToken()
+    {
+        var numberByte = new byte[32];
+        using var rnd = RandomNumberGenerator.Create();
+        rnd.GetBytes(numberByte);
+        return Convert.ToBase64String(numberByte);
     }
 }

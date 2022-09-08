@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.ProgrammingLanguages.Handlers
 {
-    public class GetProgrammingLanguageListQueryHandler : IRequestHandler<GetProgrammingLanguageListQueryRequest, IPaginate<ProgrammingLanguage>>
+    public class GetProgrammingLanguageListQueryHandler : IRequestHandler<GetProgrammingLanguageListQueryRequest, GetProgrammingLanguageListQueryResponse>
     {
         private readonly IProgrammingLanguageRepository _programmingLanguageRepository;
         private readonly IMapper _mapper;
@@ -23,11 +23,11 @@ namespace Application.Features.ProgrammingLanguages.Handlers
             _programmingLanguageRepository = programmingLanguageRepository;
             _mapper = mapper;
         }
-        public async Task<IPaginate<ProgrammingLanguage>> Handle(GetProgrammingLanguageListQueryRequest request, CancellationToken cancellationToken)
+        public async Task<GetProgrammingLanguageListQueryResponse> Handle(GetProgrammingLanguageListQueryRequest request, CancellationToken cancellationToken)
         {
             IPaginate<ProgrammingLanguage> brands = await _programmingLanguageRepository.GetListAsync
                 (index: request.PageRequest.Page, size: request.PageRequest.PageSize);
-            return brands;
+            return _mapper.Map<GetProgrammingLanguageListQueryResponse>(brands);
         }
     }
 }

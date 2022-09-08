@@ -28,8 +28,8 @@ namespace Application.Features.ProgrammingLanguages.Handlers
         public async Task<CreateProgrammingLanguageCommandResponse> Handle(CreateProgrammingLanguageCommandRequest request, CancellationToken cancellationToken)
         {
 
-            IPaginate<ProgrammingLanguage> result = await _programmingLanguageRepository.GetListAsync(p => p.Name == request.Name);
-            if (result.Items.Any()) throw new BusinessException("programming language name already exists");
+            //IPaginate<ProgrammingLanguage> result = await _programmingLanguageRepository.GetListAsync(p => p.Name == request.Name);
+            //if (result.Items.Any()) throw new BusinessException("programming language name already exists");
             ProgrammingLanguage programmingLanguage = _mapper.Map<ProgrammingLanguage>(request);
             await _programmingLanguageRepository.AddAsync(programmingLanguage);
             CreateProgrammingLanguageCommandResponse createdProgrammingLanguage = _mapper.Map<CreateProgrammingLanguageCommandResponse>(programmingLanguage);

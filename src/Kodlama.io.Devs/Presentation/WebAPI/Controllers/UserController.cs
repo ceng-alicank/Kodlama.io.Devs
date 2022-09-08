@@ -4,6 +4,7 @@ using Application.Features.Users.DeleteGithubAddress;
 using Application.Features.Users.Login;
 using Application.Features.Users.Update;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

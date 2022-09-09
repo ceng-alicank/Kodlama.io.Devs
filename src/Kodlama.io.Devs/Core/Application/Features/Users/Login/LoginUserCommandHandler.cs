@@ -13,7 +13,6 @@ namespace Application.Features.Users.Login
         private readonly IMapper _mapper;
         private readonly IOperationClaimRepository _operationClaimRepository;
         private readonly ITokenHelper _tokenHelper;
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
 
         public LoginUserCommandHandler(IUserRepository userRepository, IMapper mapper, ITokenHelper tokenHelper, IOperationClaimRepository operationClaimRepository, IRefreshTokenRepository refreshTokenRepository)
@@ -22,7 +21,6 @@ namespace Application.Features.Users.Login
             _mapper = mapper;
             _tokenHelper = tokenHelper;
             _operationClaimRepository = operationClaimRepository;
-            _refreshTokenRepository = refreshTokenRepository;
         }
 
         public async Task<LoginUserCommandResponse> Handle(LoginUserCommandRequest request, CancellationToken cancellationToken)

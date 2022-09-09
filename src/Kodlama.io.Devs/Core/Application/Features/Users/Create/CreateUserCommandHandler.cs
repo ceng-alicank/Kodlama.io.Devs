@@ -16,7 +16,7 @@ namespace Application.Features.Users.Create
         private readonly IOperationClaimRepository _operationClaimRepository;
         private readonly ITokenHelper _tokenHelper;
 
-        public CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper, ITokenHelper tokenHelper, IOperationClaimRepository operationClaimRepository)
+        public CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper, ITokenHelper tokenHelper, IOperationClaimRepository operationClaimRepository, IRefreshTokenRepository refreshTokenRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -33,11 +33,9 @@ namespace Application.Features.Users.Create
             user.Status = true;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-            var adddedUser = await _userRepository.AddAsync(user);
-            var roles = await _operationClaimRepository.GetListAsync(x => x.UserOperationClaims.Any(y => y.UserId == adddedUser.Id));
+            var addedUser = await _userRepository.AddAsync(user);
+            var roles = await _operationClaimRepository.GetListAsync(x => x.UserOperationClaims.Any(y => y.UserId == addedUser.Id));
             AccessToken accessToken = _tokenHelper.CreateToken(user, roles.Items);
-            
-           
             return _mapper.Map<CreateUserCommandResponse>(accessToken);
         }
     }

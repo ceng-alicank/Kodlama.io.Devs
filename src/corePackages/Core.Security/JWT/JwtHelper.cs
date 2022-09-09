@@ -37,38 +37,7 @@ public class JwtHelper : ITokenHelper
             Expiration = _accessTokenExpiration
         };
     }
-    public string? ValidateToken(string token)
-    {
-        if (token == null)
-            return null;
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        SecurityKey securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
-        try
-        {
-            tokenHandler.ValidateToken(token, new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = securityKey,
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
-                ClockSkew = TimeSpan.Zero
-            }, out SecurityToken validatedToken);
-
-            var jwtToken = (JwtSecurityToken)validatedToken;
-            var email = jwtToken.Claims.First(x => x.Type == "Email").Value;
-
-            // return user id from JWT token if validation successful
-            return email;
-        }
-        catch
-        {
-            // return null if validation fails
-            return null;
-        }
-    }
-
+   
     public RefreshToken CreateRefreshToken(User user, string ipAddress)
     {
         RefreshToken refreshToken = new()

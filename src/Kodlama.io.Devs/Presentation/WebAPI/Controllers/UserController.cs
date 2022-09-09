@@ -1,5 +1,6 @@
 ﻿using Application.Features.Users.AddGithubAddress;
 using Application.Features.Users.Create;
+using Application.Features.Users.CreateAccessTokenByRefreshToken;
 using Application.Features.Users.DeleteGithubAddress;
 using Application.Features.Users.Login;
 using Application.Features.Users.Update;
@@ -30,6 +31,12 @@ namespace WebAPI.Controllers
         }
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginUserCommandRequest request)
+        {
+            var result = await _mediator.Send(request);
+            return Ok(result);
+        }
+        [HttpPost("CreateAccessTokenByRefreshToken")]
+        public async Task<IActionResult> CreateAccessTokenByRefreshToken(CreateAccessTokenByRefreshTokenRequest request)
         {
             var result = await _mediator.Send(request);
             return Ok(result);

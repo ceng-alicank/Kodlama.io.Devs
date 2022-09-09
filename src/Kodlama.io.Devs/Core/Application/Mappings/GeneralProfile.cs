@@ -38,8 +38,6 @@ namespace Application.Mappings
 
 
             CreateMap<CreateUserCommandRequest, User>();
-            CreateMap<AccessToken, CreateUserCommandResponse>();
-            CreateMap<AccessToken, LoginUserCommandResponse>();
         }
     }
 }

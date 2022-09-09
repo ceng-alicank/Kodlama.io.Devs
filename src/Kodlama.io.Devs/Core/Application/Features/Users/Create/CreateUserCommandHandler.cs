@@ -15,13 +15,14 @@ namespace Application.Features.Users.Create
         private readonly IMapper _mapper;
         private readonly IOperationClaimRepository _operationClaimRepository;
         private readonly ITokenHelper _tokenHelper;
-
-        public CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper, ITokenHelper tokenHelper, IOperationClaimRepository operationClaimRepository, IRefreshTokenRepository refreshTokenRepository)
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        public CreateUserCommandHandler(IUserRepository userRepository,IMapper mapper, ITokenHelper tokenHelper, IOperationClaimRepository operationClaimRepository, IRefreshTokenRepository refreshTokenRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _tokenHelper = tokenHelper;
             _operationClaimRepository = operationClaimRepository;
+            _refreshTokenRepository = refreshTokenRepository;   
         }
 
         public async Task<CreateUserCommandResponse> Handle(CreateUserCommandRequest request, CancellationToken cancellationToken)
@@ -35,8 +36,15 @@ namespace Application.Features.Users.Create
             user.PasswordSalt = passwordSalt;
             var addedUser = await _userRepository.AddAsync(user);
             var roles = await _operationClaimRepository.GetListAsync(x => x.UserOperationClaims.Any(y => y.UserId == addedUser.Id));
-            AccessToken accessToken = _tokenHelper.CreateToken(user, roles.Items);
-            return _mapper.Map<CreateUserCommandResponse>(accessToken);
+            var accessToken = _tokenHelper.CreateToken(addedUser, roles.Items);
+            var refreshToken = _tokenHelper.CreateRefreshToken(addedUser);
+            RefreshToken addedRefreshToken = await _refreshTokenRepository.AddAsync(refreshToken);
+            return new CreateUserCommandResponse(
+                    accessToken:accessToken.Token,
+                    accessTokenExpiration:accessToken.Expiration,
+                    refreshToken:refreshToken.Token,
+                    refreshTokenExpiration:refreshToken.Expires
+                );
         }
     }
 }

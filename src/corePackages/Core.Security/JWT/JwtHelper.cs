@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using Core.Security.Encryption;
 using Core.Security.Entities;
 using Core.Security.Extensions;
@@ -14,7 +15,6 @@ public class JwtHelper : ITokenHelper
     public IConfiguration Configuration { get; }
     private readonly TokenOptions _tokenOptions;
     private DateTime _accessTokenExpiration;
-    private DateTime _refreshTokenExpiration;
 
     public JwtHelper(IConfiguration configuration)
     {
@@ -25,7 +25,6 @@ public class JwtHelper : ITokenHelper
     public AccessToken CreateToken(User user, IList<OperationClaim> operationClaims)
     {
         _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
-        _refreshTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.RefreshTokenExpiration);
         SecurityKey securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
         SigningCredentials signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
         JwtSecurityToken jwt = CreateJwtSecurityToken(_tokenOptions, user, signingCredentials, operationClaims);
@@ -34,11 +33,40 @@ public class JwtHelper : ITokenHelper
 
         return new AccessToken
         {
-            RefreshToken = CreateRefreshToken(),
-            RefreshTokenExpiration = _refreshTokenExpiration,
             Token = token,
             Expiration = _accessTokenExpiration
         };
+    }
+    public string? ValidateToken(string token)
+    {
+        if (token == null)
+            return null;
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        SecurityKey securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
+        try
+        {
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = securityKey,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+
+            var jwtToken = (JwtSecurityToken)validatedToken;
+            var email = jwtToken.Claims.First(x => x.Type == "Email").Value;
+
+            // return user id from JWT token if validation successful
+            return email;
+        }
+        catch
+        {
+            // return null if validation fails
+            return null;
+        }
     }
 
     public RefreshToken CreateRefreshToken(User user, string ipAddress)
@@ -78,12 +106,5 @@ public class JwtHelper : ITokenHelper
         claims.AddName($"{user.FirstName} {user.LastName}");
         claims.AddRoles(operationClaims.Select(c => c.Name).ToArray());
         return claims;
-    }
-    private string CreateRefreshToken()
-    {
-        var numberByte = new byte[32];
-        using var rnd = RandomNumberGenerator.Create();
-        rnd.GetBytes(numberByte);
-        return Convert.ToBase64String(numberByte);
     }
 }

@@ -35,16 +35,6 @@ namespace Application.Features.Users.Login
                     var roles = await _operationClaimRepository.GetListAsync(x => x.UserOperationClaims.Any(y => y.UserId == usertocheck.Id));
 
                     AccessToken accessToken = _tokenHelper.CreateToken(usertocheck, roles.Items);
-                    var refreshToken = await _refreshTokenRepository.GetAsync(x => x.UserId == usertocheck.Id);
-                    if (refreshToken == null)
-                    {
-                        await _refreshTokenRepository.AddAsync(new RefreshToken { UserId = usertocheck.Id, Token = accessToken.RefreshToken, Expires = accessToken.RefreshTokenExpiration });
-                    }
-                    else
-                    {
-                        refreshToken.Token = accessToken.RefreshToken;
-                        refreshToken.Expires = accessToken.RefreshTokenExpiration;
-                    }
                     return _mapper.Map<LoginUserCommandResponse>(accessToken);
                 }
             }

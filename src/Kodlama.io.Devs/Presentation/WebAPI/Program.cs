@@ -1,9 +1,14 @@
 using Application;
+using Core.Application.Pipelines.Authorization;
+using MediatR.Behaviors.Authorization.Extensions.DependencyInjection;
 using Core.Security.Encryption;
 using Core.Security.JWT;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
+using System.Reflection;
+using Core.CrossCuttingConcerns.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +20,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationServices();
 builder.Services.AddSecurityServices();
 builder.Services.AddPersistenceInfrastructurer(builder.Configuration);
+
+
 var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -44,9 +51,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-//if (app.Environment.IsProduction())
-    //app.ConfigureCustomExceptionMiddleware();
-
+app.ConfigureCustomExceptionMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 

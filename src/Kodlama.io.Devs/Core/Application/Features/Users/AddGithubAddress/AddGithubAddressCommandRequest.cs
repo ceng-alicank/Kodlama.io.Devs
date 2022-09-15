@@ -13,6 +13,6 @@ namespace Application.Features.Users.AddGithubAddress
         public int Id { get; set; }
         public string GithubAddress { get; set; }
 
-        public string[] Roles { get; set; }
+        public string[] Roles { get; } = {"user"};
     }
 }
